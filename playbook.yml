@@ -1,0 +1,12 @@
+- name: Utility
+  hosts: localhost
+  tasks:
+    - name: Print Message
+      ansible.builtin.debug:
+        msg: aieie
+    - name: update
+      ansible.builtin.apt:
+        update-cache: yes
+    - name: tldr
+      ansible.builtin.apt:
+        name: tldr      
