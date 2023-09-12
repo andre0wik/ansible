@@ -4,9 +4,9 @@
     - name: Print Message
       ansible.builtin.debug:
         msg: aieie
-    - name: update
-      ansible.builtin.apt:
-        update-cache: yes
+          #- name: update
+          #ansible.builtin.apt:
+          #update-cache: yes
     - name: tldr
       ansible.builtin.apt:
         name: tldr
@@ -15,17 +15,25 @@
         name: apt-transport-https
         name: ca-certificates
         name: curl
-    - name: kube-repo-key-1
-      become: true
-      ansible.builtin.command:
-        cmd: 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key |  gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg'
+    - name: ci riprovo
+      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg      
     - name: kube-repo-boh
       become: true
-      ansible.builtin.command:
-        cmd: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list 
-    - name: update
-      apt: update_cache=yes  force_apt_get=yes
+      shell:  echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+         
+        #- name: update
+        # ansible.builtin.apt: 
+        #update_cache=yes  force_apt_get=yes
       
     - name: install-kube
       ansible.builtin.apt:
         name: kubectl
+    - name: Creates directory
+      ansible.builtin.file:
+        path:  ~/.kube
+        state: directory
+      
+    - name: Copykubconfig
+      ansible.builtin.copy:
+        src: configs/kube/k3s.txt
+        dest: ~/.kube/config    
